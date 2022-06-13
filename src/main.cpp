@@ -1,61 +1,41 @@
 #include <Arduino.h>
 
-#include "arduinoFFT.h"
-  
-#define SAMPLES 16               //Must be a power of 2
-#define SAMPLING_FREQUENCY 50000  //Hz
-#define REFRESH_RATE 10           //Hz
-#define ARDUINO_IDE_PLOTTER_SIZE 500
-  
-arduinoFFT FFT = arduinoFFT();
-  
-unsigned long sampling_period_us;
-unsigned long useconds_sampling;
- 
-unsigned long refresh_period_us;
-unsigned long useconds_refresh;
-  
-double vReal[SAMPLES];
-double vImag[SAMPLES];
-double start[SAMPLES];
-uint8_t analogpin = A0;
 
-void read_data(){
-  useconds_refresh = micros();
-  for(int i=0; i<SAMPLES; i++){
-    useconds_sampling = micros();
-  
-    vReal[i] = analogRead(analogpin);
-    vImag[i] = 0;
-  
-    while(micros() < (useconds_sampling + sampling_period_us)){
-      //wait...
-    }
-  }
-  FFT.Windowing(vReal, SAMPLES, FFT_WIN_TYP_HAMMING, FFT_FORWARD);
-  FFT.Compute(vReal, vImag, SAMPLES, FFT_FORWARD);
-  FFT.ComplexToMagnitude(vReal, vImag, SAMPLES);
+const uint16_t maxn = 250;
+const uint16_t freq1 = 1000;
+
+uint16_t data[maxn];
+
+void read_analog(){
+	for(uint16_t i = 0; i < maxn; i++){
+		data[i] = analogRead(A0);
+		delayMicroseconds(2);
+	}
+}
+
+double power_of_freq(uint16_t freq){
+	double X = 0;
+	uint16_t start = freq - 10;
+	uint16_t end = freq + 10;
+	for(uint16_t w = start; w < end; w++){
+		double x = 0;
+		for(uint16_t j = 0 ; j < maxn ; j++){
+			x += sin((double)j * w) * data[j];
+		}
+		X+=x*x;
+	}
+	return X / (start - end);
 }
 
 
 
-void setup() {
-  Serial.begin(115200);
- 
-  sampling_period_us = round(1000000*(1.0/SAMPLING_FREQUENCY));
-  refresh_period_us = round(1000000*(1.0/REFRESH_RATE));
- 
-  pinMode(analogpin, INPUT);
-  read_data();
-  for(int i = 0 ; i < SAMPLES / 2 ; i++) start[i] = vReal[i];
+void setup() { 
+	Serial.begin(115200);
 }
   
 void loop() {
-   read_data();
-   for(int i =6 ; i < 7; i++){
-    Serial.print(vReal[i] - start[i]);
-    Serial.print(" ");
-   }
-  Serial.println();
- 
+	read_analog();
+	Serial.print(power_of_freq(1000) * 1000);
+	Serial.print("\n");
+	// Serial.println(power_of_freq(1000));
 }
