@@ -1,5 +1,9 @@
 #include "complex.h"
 
+complex::complex(){
+
+}
+
 complex::complex(double a){
     real = a;
 }
@@ -40,6 +44,6 @@ complex& complex::operator*=(const complex& other){
 }
 
 
-complex complex::polar(double r , double angle){
+complex polar(double r , double angle){
     return complex(cos(angle) * r , sin(angle) * r);
 }
