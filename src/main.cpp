@@ -34,8 +34,14 @@ void setup() {
 }
   
 void loop() {
-	read_analog();
-	Serial.print(power_of_freq(1000) * 1000);
-	Serial.print("\n");
+	// read_analog();
+	// Serial.print(power_of_freq(1000) * 1000);
+	// Serial.print("\n");
 	// Serial.println(power_of_freq(1000));
+	uint16_t val = 0;
+	for(uint8_t i = 0 ; i < 10 ; i++){
+		val+=analogRead(A0);
+		delayMicroseconds(1);
+	}
+	Serial.println(val / 10);
 }
