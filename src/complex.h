@@ -1,3 +1,6 @@
+#pragma once
+
+
 #include <Arduino.h>
 
 class complex{
@@ -17,7 +20,7 @@ public:
     complex& operator+=(const complex& other);
     complex& operator-=(const complex& other);
     complex& operator*=(const complex& other);
-   
+    void debug();
 
 };
 

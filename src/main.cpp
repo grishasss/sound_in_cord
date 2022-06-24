@@ -1,25 +1,33 @@
 #include <Arduino.h>
 #include "complex.h"
-
-const uint16_t maxn = 250;
-const uint16_t freq1 = 1000;
-
+#include "fft.h"
+const uint16_t num = 1 << 7;
 
 
 
 
+fft FFT;
 
+uint16_t D[num];
 void setup() { 
 	Serial.begin(115200);
-	polar(1. , 1.);
+	FFT.set_data_size(num);
+	pinMode(A0, INPUT);
 }
   
 void loop() {
 	
-	uint16_t val = 0;
-	for(uint8_t i = 0 ; i < 10 ; i++){
-		val+=analogRead(A0);
-		delayMicroseconds(1);
+	for(uint16_t i = 0 ; i < num ; i++){
+		D[i] = analogRead(A0);
+		delayMicroseconds(2);
 	}
-	Serial.println(val / 10);
+	FFT.upload_data(D);
+	FFT.calc();
+	
+	for(uint16_t i = 0 ; i < num ; i++){
+		Serial.print(round(FFT.V[i].real));
+		Serial.print(" ");
+	}
+	Serial.print("\n");
+	// delay();
 }

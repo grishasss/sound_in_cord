@@ -6,6 +6,7 @@ complex::complex(){
 
 complex::complex(double a){
     real = a;
+    imag = 0;
 }
 
 complex::complex(double a , double b){
@@ -46,4 +47,8 @@ complex& complex::operator*=(const complex& other){
 
 complex polar(double r , double angle){
     return complex(cos(angle) * r , sin(angle) * r);
+}
+
+void complex::debug(){
+    Serial.println("{" + String(real) + ", " + String(imag)+ "}");
 }

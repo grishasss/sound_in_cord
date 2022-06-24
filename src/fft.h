@@ -1,10 +1,13 @@
+#pragma once
+
+
 #include <Arduino.h>
 #include <complex.h>
 
 class fft{
 public:
     uint16_t *data;
-    complex *V;
+    complex *V , *kor;
     uint16_t n;
     uint8_t logn;
 
