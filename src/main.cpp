@@ -8,7 +8,7 @@ const uint16_t num = 1 << 7;
 
 fft FFT;
 
-uint16_t D[num];
+int D[num];
 void setup() { 
 	Serial.begin(115200);
 	FFT.set_data_size(num);
@@ -19,15 +19,19 @@ void loop() {
 	
 	for(uint16_t i = 0 ; i < num ; i++){
 		D[i] = analogRead(A0);
-		delayMicroseconds(2);
+		
+		// delayMicroseconds(2);
 	}
-	FFT.upload_data(D);
-	FFT.calc();
-	
 	for(uint16_t i = 0 ; i < num ; i++){
-		Serial.print(round(FFT.V[i].real));
-		Serial.print(" ");
+		Serial.println(D[i]);
 	}
-	Serial.print("\n");
+	// FFT.upload_data(D);
+	// FFT.calc();
+	
+	// for(uint16_t i = 0 ; i < num ; i++){
+	// 	Serial.print(round(FFT.V[i].real));
+	// 	Serial.print(" ");
+	// }
+	// Serial.print("\n");
 	// delay();
 }
